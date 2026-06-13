@@ -22,7 +22,13 @@ function show(req, res) {
 
     const { id } = req.params;
 
-    const sql = "SELECT * FROM books WHERE id = ? ";
+
+    const sql = `SELECT B.*, ROUND(AVG(R.vote)) as average_vote
+                            FROM books as B 
+                            LEFT JOIN reviews as R on B.id = R.book_id
+                            WHERE B.id = ? ;  
+                            `;
+
 
     connection.query(sql, [id], (err, results) => {
         if (err) {
@@ -54,7 +60,12 @@ function show(req, res) {
                 book.reviews = reviewResults
             }
 
-            res.json(book);
+            book.average_vote = parseInt(book.average_vote);
+            res.json({
+                ...book,
+                image: req.imagePath + book.image,
+            }
+            );
         })
 
     })
