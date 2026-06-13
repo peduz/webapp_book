@@ -4,6 +4,8 @@ const app = express();
 
 const port = process.env.PORT;
 
+const bookRouter = require("./routers/bookRouter")
+
 //Middlewares
 const errorsHandler = require("./middlewares/errorsHandler")
 const notFound = require("./middlewares/notFound")
@@ -15,6 +17,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Server is up")
 });
+
+app.use("/api/books", bookRouter)
 
 app.use(errorsHandler)
 app.use(notFound)
